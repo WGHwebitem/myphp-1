@@ -1,0 +1,224 @@
+php接口  https://secure.php.net/manual/zh/class.mysqli.php(PHP属性文档)
+1、第一步先搭建服务器运行环境（xampp）
+2、安装好之后，找到安装的位置找到：xampp-control，然后运行（一般安装在本电脑的D盘，不要安装在C盘，
+因为电脑也有默认的XAmpp程序会阻止某个程序运行）
+3、浏览器输入http://localhost/phpmyadmin/ 创建数据库名为people，在people库中创建表customers（也可以创建很多的表）
+4、在xampp文件中找到htdocs文件夹，把你写的php接口代码放入这个文件中（可以在htdocs这个文件中新建一个文件存储）
+也可以把htdocs拖到电脑的下载下面，方便找到该文件夹
+5、注（本地的服务器只能自己访问，别人是访问不到的，然后就需要买个网咯服务器，把以上步骤在网咯服务器上进行安装，
+然后在网络服务器上建一个站点,把你的代码放入站点下，别人就可以网络访问了（任何东西也是，在服务器的东西，要想访问必须把代码及东西放到站点下））
+6、打开本电脑的控制面板----管理工具-----Internet Information Services (IIS)管理器（类似于internet的）------双击进去
+然后查看网站----------然后在左边单击右键-----选择新建站点-----就成功建好本地网站了，
+访问方式：http://192.168.13.101:8005/login.html
+7、
+代码：连接数据库：
+1、封装；
+<?php
+#连接数据库 new mysqli(服务器地址,服务器用户名,服务器密码,数据库名称)
+$mysqli=new mysqli("localhost","root","","people");
+#判断数据库是否连接成功,打印错误信息
+if($mysqli->connect_errno){
+	#只要不为0，就表示失败
+	die($mysqli->connect_error);
+}
+#设定字符编码
+$mysqli->query("set names utf8");
+$result=$mysqli->query($sql);
+#打印出数据给客户端
+if($result->num_rows){
+			#查询数据的第一种方法fetch_row()
+			//$row=$result->fetch_row();//fetch_row()php数据库中获取数据的方法
+			//print_r($row);
+//			while($row=$result->fetch_row()){
+//				print_r($row);
+//			}
+			#查询数据的第二种方法fetch_array() 参数MYSQL_ASSOC表示是下表数组查询还是关联数组查询
+//			while($row=$result->fetch_array(MYSQLI_ASSOC)){
+//				print_r($row);
+//				echo "<hr>";
+//			}
+			#查询数据的第三种方法 fetch_all();
+			$Table="'Table'";
+			$row=$result->fetch_all(MYSQLI_ASSOC);
+				//echo json_encode($row);//json_encode返回json格式
+				//JSON_UNESCAPED_UNICODE 中文不转为unicode ，对应的数字 
+				$rowjson=json_encode($row,JSON_UNESCAPED_UNICODE);
+			     echo  $rowjson;			    
+		}
+		$mysqli->close();//关闭连接数据库
+	}
+?>
+//删除
+<?php
+include 'apifenzhuang.php';//调用封装页面
+ #$_GET["id"]来接收url的参数（更据唯一键去删除某条数据） customers表名
+$idv = $_GET["id"];
+$sql="DELETE FROM customers WHERE id=$idv";
+selctData($sql);
+?>
+
+//查询
+<?php
+include 'apifenzhuang.php';//调用封装页面
+  $sql="SELECT * FROM customers";
+  selctData($sql);
+?>
+
+//更新
+<?php
+include 'apifenzhuang.php';//调用封装页面
+ #接收url的参数
+$idv = $_GET["id"];
+$firstnamev = $_GET["firstname"];
+$lastnamev = $_GET["lastname"];
+$emailv = $_GET["email"];
+$adressv = $_GET["adress"];
+$cityv = $_GET["city"];
+$statev = $_GET["state"];
+//echo $firstnamev.",".$lastnamev.",".$emailv.",".$adressv.",".$cityv.",".$statev;
+$sql="UPDATE customers SET `firstname`='$firstnamev',`lastname`='$lastnamev',`email`='$emailv',`adress`='$adressv',`city`='$cityv',`state`='$statev' WHERE id=$idv";
+selctData($sql);
+  //http://localhost/myphptest/apiadd.php?firstname=小黑&lastname=韦&email=2960221@163.com&adress=水产西路富长路&city=上海市宝山区&state=YES
+?>
+
+//增加
+<?php
+include 'apifenzhuang.php';//调用封装页面
+ #接收url的参数
+//$idv = $_GET["id"];
+$firstnamev = $_GET["firstname"];
+$lastnamev = $_GET["lastname"];
+$emailv = $_GET["email"];
+$adressv = $_GET["adress"];
+$cityv = $_GET["city"];
+$statev = $_GET["state"];
+//echo $firstnamev.",".$lastnamev.",".$emailv.",".$adressv.",".$cityv.",".$statev;
+$sql="INSERT INTO `customers` (`id`, `firstname`, `lastname`, `email`, `adress`, `city`, `state`) VALUES (NULL, '$firstnamev', '$lastnamev', '$emailv', '$adressv', '$cityv', '$statev')";
+selctData($sql);
+  //http://localhost/myphptest/apiadd.php?firstname=小黑&lastname=韦&email=2960221@163.com&adress=水产西路富长路&city=上海市宝山区&state=YES
+?>
+
+
+html页面请求
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			table{width: 100%;height: 100px;border: 1px solid #000;border-collapse: collapse; 
+			}
+			table tr td{height:20px;background: red;}
+		</style>
+	</head>
+	<body>
+		<div class="inertp">
+			<table>
+			</table>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/jquery-1.4.1.min.js"></script>
+<script>
+	$(document).ready(function(){
+		//$.post('http://localhost/myphptest/apislect.php?r=1',{},function(datares){alert(datares)})
+		//window.location.href='http://localhost/myphptest/apislect.php?r=1'
+		
+		//绑数据添加
+//		$.ajax({
+//			url:'http://localhost/myphptest/apiadd.php?r='+ Math.random(),//地址
+//			type:"GET",
+//			async:true,
+//			data:{
+//			    firstname:'封面',
+//				lastname:'书',
+//				email:'1000@163.com',
+//				adress:'桃花园记',
+//				city:'无限',
+//				state:'备注'
+//			},
+//			timeout:5000,                                                 
+//          dataType:'json', 
+//          success:function(data,textStatus,jqXHR){
+//				alert('添加成功~');
+//				selectFun();
+//			}
+//		});
+//更新数据
+//		$.ajax({
+//			url:'http://localhost/myphptest/apiupdate.php?r='+ Math.random(),//地址
+//			type:"GET",
+//			async:true,
+//			data:{
+//				id:'2',
+//			    firstname:'咯',
+//				lastname:'书',
+//				email:'yyww@163.com',
+//				adress:'yy',
+//				city:'yy',
+//				state:'ww'
+//			},
+//			timeout:5000,                                                 
+//          dataType:'json', 
+//          success:function(data,textStatus,jqXHR){
+//				alert('更新成功~');
+//				selectFun();
+//			}
+//		});
+//删除数据
+		$.ajax({
+			url:'http://localhost/myphptest/paidelet.php?r='+ Math.random(),//地址
+			type:"GET",
+			async:true,
+			data:{
+				id:'17',
+			},
+			timeout:5000,                                                 
+            dataType:'json', 
+            success:function(data,textStatus,jqXHR){
+				alert('删除成功~');
+				selectFun();
+			}
+		});
+		
+	function selectFun(){
+		$.ajax({//绑数据查询
+            url :'http://localhost/myphptest/apislect.php?r='+ Math.random(),//地址
+            type:'GET',                          
+            async:true,                             
+            data:{},
+            timeout:5000,                                                 
+            dataType:'json', 
+            success:function(data,textStatus,jqXHR){
+            //var datav=JSON.stringify(data);
+            //eval() 函数可计算某个字符串
+			var arrA = eval(data);
+			for(var i=0;i<arrA.length;i++){
+				var tpl='';
+			  var obj1= JSON.stringify(arrA[i].firstname).replace("\"","").replace("\"","");
+			  var obj2= JSON.stringify(arrA[i].lastname).replace("\"","").replace("\"","");
+			  var obj3= JSON.stringify(arrA[i].email).replace("\"","").replace("\"","");
+			  var obj4= JSON.stringify(arrA[i].adress).replace("\"","").replace("\"","");
+			  var obj5= JSON.stringify(arrA[i].city).replace("\"","").replace("\"","");
+			  var obj6= JSON.stringify(arrA[i].state).replace("\"","").replace("\"","");
+			  tpl+='<tr><td>'+obj1+'</td>'
+			         +'<td>'+obj2+'</td>'
+			         +'<td>'+obj3+'</td>'
+			         +'<td>'+obj4+'</td>'
+			         +'<td>'+obj5+'</td>'
+			         +'<td>'+obj6+'</td></tr>';
+			          $('.inertp table').append(tpl);
+			}
+			
+			
+            },
+            error:function(xhr,textStatus){
+                console.log('错误')
+            }
+       })
+}
+	
+})
+
+
+</script>
+</html>

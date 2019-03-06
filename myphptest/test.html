@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			table{width: 100%;height: 100px;border: 1px solid #000;border-collapse: collapse; 
+			}
+			table tr td{height:20px;background: red;}
+		</style>
+	</head>
+	<body>
+		<div class="inertp">
+			<table>
+			</table>
+		</div>
+	</body>
+	<script type="text/javascript" src="js/jquery-1.4.1.min.js"></script>
+<script>
+	$(document).ready(function(){
+		//$.post('http://localhost/myphptest/apislect.php?r=1',{},function(datares){alert(datares)})
+		//window.location.href='http://localhost/myphptest/apislect.php?r=1'
+		
+		//绑数据添加
+//		$.ajax({
+//			url:'http://localhost/myphptest/apiadd.php?r='+ Math.random(),//地址
+//			type:"GET",
+//			async:true,
+//			data:{
+//			    firstname:'封面',
+//				lastname:'书',
+//				email:'1000@163.com',
+//				adress:'桃花园记',
+//				city:'无限',
+//				state:'备注'
+//			},
+//			timeout:5000,                                                 
+//          dataType:'json', 
+//          success:function(data,textStatus,jqXHR){
+//				alert('添加成功~');
+//				selectFun();
+//			}
+//		});
+//更新数据
+//		$.ajax({
+//			url:'http://localhost/myphptest/apiupdate.php?r='+ Math.random(),//地址
+//			type:"GET",
+//			async:true,
+//			data:{
+//				id:'2',
+//			    firstname:'咯',
+//				lastname:'书',
+//				email:'yyww@163.com',
+//				adress:'yy',
+//				city:'yy',
+//				state:'ww'
+//			},
+//			timeout:5000,                                                 
+//          dataType:'json', 
+//          success:function(data,textStatus,jqXHR){
+//				alert('更新成功~');
+//				selectFun();
+//			}
+//		});
+//删除数据
+		$.ajax({
+			url:'http://localhost/myphptest/paidelet.php?r='+ Math.random(),//地址
+			type:"GET",
+			async:true,
+			data:{
+				id:'17',
+			},
+			timeout:5000,                                                 
+            dataType:'json', 
+            success:function(data,textStatus,jqXHR){
+				alert('删除成功~');
+				selectFun();
+			}
+		});
+		
+	function selectFun(){
+		$.ajax({//绑数据查询
+            url :'http://localhost/myphptest/apislect.php?r='+ Math.random(),//地址
+            type:'GET',                          
+            async:true,                             
+            data:{},
+            timeout:5000,                                                 
+            dataType:'json', 
+            success:function(data,textStatus,jqXHR){
+            //var datav=JSON.stringify(data);
+            //eval() 函数可计算某个字符串
+			var arrA = eval(data);
+			for(var i=0;i<arrA.length;i++){
+				var tpl='';
+			  var obj1= JSON.stringify(arrA[i].firstname).replace("\"","").replace("\"","");
+			  var obj2= JSON.stringify(arrA[i].lastname).replace("\"","").replace("\"","");
+			  var obj3= JSON.stringify(arrA[i].email).replace("\"","").replace("\"","");
+			  var obj4= JSON.stringify(arrA[i].adress).replace("\"","").replace("\"","");
+			  var obj5= JSON.stringify(arrA[i].city).replace("\"","").replace("\"","");
+			  var obj6= JSON.stringify(arrA[i].state).replace("\"","").replace("\"","");
+			  tpl+='<tr><td>'+obj1+'</td>'
+			         +'<td>'+obj2+'</td>'
+			         +'<td>'+obj3+'</td>'
+			         +'<td>'+obj4+'</td>'
+			         +'<td>'+obj5+'</td>'
+			         +'<td>'+obj6+'</td></tr>';
+			          $('.inertp table').append(tpl);
+			}
+			
+			
+            },
+            error:function(xhr,textStatus){
+                console.log('错误')
+            }
+       })
+}
+	
+})
+
+
+</script>
+</html>
