@@ -1,15 +1,23 @@
-php接口  https://secure.php.net/manual/zh/class.mysqli.php(PHP属性文档)
-1、第一步先搭建服务器运行环境（xampp）(按装取消了解xmapp)
+php接口  https://secure.php.net/manual/zh/class.mysqli.php(PHP属性文档)；
+
+1、第一步先搭建服务器运行环境（xampp）(按装取消了解xmapp);
+
 2、安装好之后，找到安装的位置找到：xampp-control，然后运行（一般安装在本电脑的D盘，不要安装在C盘，
-因为电脑也有默认的XAmpp程序会阻止某个程序运行）配置Apache:把httpd.conf中的80端口全部修改为8081，如果不修改，会与默认80端口产生冲突，严重时可能导致浏览器不能正常使用。（注意：没有更改Apache的端口时，使用的是 http://localhost 访问xampp主页；更改后， 假设80改为了8081 则使用 http://localhost:8081 访问xampp主页， 访问xampp下的其他php也是这样;详细：https://blog.csdn.net/qing666888/article/details/81914389
-3、浏览器输入http://localhost/phpmyadmin/ 创建数据库名为people，在people库中创建表customers（也可以创建很多的表）
+因为电脑也有默认的XAmpp程序会阻止某个程序运行）配置Apache:把httpd.conf中的80端口全部修改为8081，如果不修改，会与默认80端口产生冲突，严重时可能导致浏览器不能正常使用。（注意：没有更改Apache的端口时，使用的是 http://localhost 访问xampp主页；更改后， 假设80改为了8081 则使用 http://localhost:8081 访问xampp主页， 访问xampp下的其他php也是这样;安装详细：https://blog.csdn.net/qing666888/article/details/81914389;
+
+3、浏览器输入http://localhost/phpmyadmin/ 或http://localhost:8081/phpmyadmin/创建数据库名为people，在people库中创建表customers（也可以创建很多的表）;
+
 4、在xampp文件中找到htdocs文件夹，把你写的php接口代码放入这个文件中（可以在htdocs这个文件中新建一个文件存储）
-也可以把htdocs拖到电脑的下载下面，方便找到该文件夹，经过上述的配置后 xampp 的基本配置已经完成了，请记住您的站点根目录为 xampp 目录下的 htdocs 文件夹。您可以在 htdocs 目录下创建任意一个站点。例如将 test.php 放在 .\xampp\htdocs\new 路径下，您就可以在浏览器的地址栏中输入 http://localhost/new/test.php 来访问这个文件。
+也可以把htdocs拖到电脑的下载下面，方便找到该文件夹，经过上述的配置后 xampp 的基本配置已经完成了，请记住您的站点根目录为 xampp 目录下的 htdocs 文件夹。您可以在 htdocs 目录下创建任意一个站点。例如将 test.php 放在 .\xampp\htdocs\new 路径下，您就可以在浏览器的地址栏中输入 http://localhost/new/test.php 来访问这个文件。;
+
 5、注（本地的服务器只能自己访问，别人是访问不到的，然后就需要买个网咯服务器，把以上步骤在网咯服务器上进行安装，
 然后在网络服务器上建一个站点,把你的代码放入站点下，别人就可以网络访问了（任何东西也是，在服务器的东西，要想访问必须把代码及东西放到站点下））
+
 6、打开本电脑的控制面板----管理工具-----Internet Information Services (IIS)管理器（类似于internet的）------双击进去
 然后查看网站----------然后在左边单击右键-----选择新建站点-----就成功建好本地网站了，
 访问方式：http://192.168.13.101:8005/login.html
+
+
 7、
 代码：连接数据库：
 1、封装；
